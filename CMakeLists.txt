@@ -1,10 +1,8 @@
-cmake_minimum_required(VERSION 3.8)
-project(hpp_skel LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 11)
+cmake_minimum_required(VERSION 3.10)
+project(img_filter LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/mason.cmake)
 
 option(WERROR "Add -Werror flag to build (turns warnings into errors)" ON)
 
@@ -31,22 +29,43 @@ if (WERROR)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 endif()
 
-# mason_use is a mason function within the mason.cmake file and provides ready-to-go vars, like "STATIC_LIBS" and "INCLUDE_DIRS"
-mason_use(catch VERSION 2.4.0 HEADER_ONLY)
-include_directories(SYSTEM ${MASON_PACKAGE_catch_INCLUDE_DIRS})
 
-mason_use(benchmark VERSION 1.4.1)
-include_directories(SYSTEM ${MASON_PACKAGE_benchmark_INCLUDE_DIRS})
+# Project Version and File
+set(PROJECT_VERSION 0.0.1)
+set(IMGFILTER_SRC "${PROJECT_SOURCE_DIR}/src")
+set(IMGFILTER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
+set(IMGFILTER_EXAMPLES_CPP_DIR "${PROJECT_SOURCE_DIR}/examples")
+set(IMGFILTER_SOURCE_FILES ${IMGFILTER_SRC}/realsense_filters.cpp)
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
+file(GLOB ALL_HEADERS ${IMGFILTER_INCLUDE_DIR}/img_filters/*.hpp)
+set(IMGFILTER_HEADER_FILES ${IMGFILTER_INCLUDE_DIR}/img_filters.hpp ALL_HEADERS)
 
-file(GLOB TEST_SOURCES test/*.cpp)
-add_executable(unit-tests ${TEST_SOURCES})
+# Create Image Filter Library
+set(LIB_TYPE STATIC)
+add_library(img_filter ${LIB_TYPE} ${IMGFILTER_SOURCE_FILES})
 
-# libbenchmark.a supports threads and therefore needs pthread support
-find_package(Threads REQUIRED)
-file(GLOB BENCH_SOURCES bench/*.cpp)
-add_executable(bench-tests ${BENCH_SOURCES})
 
-# link benchmark static library to the bench-tests binary so the bench tests know where to find the benchmark impl code
-target_link_libraries(bench-tests ${MASON_PACKAGE_benchmark_STATIC_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+# Set Header and Properties of Image Filter Library
+set_target_properties(img_filter PROPERTIES PUBLIC_HEADER "${IMGFILTER_HEADER_FILES}")
+target_include_directories(${PROJECT_NAME} PUBLIC
+$<BUILD_INTERFACE:${IMGFILTER_INCLUDE_DIR}>
+$<INSTALL_INTERFACE:include>
+PRIVATE src)
+set_target_properties(img_filter PROPERTIES VERSION ${PROJECT_VERSION})
+
+
+# Setup Testing and Benchmarks
+add_subdirectory("thirdparty/googletest")
+add_subdirectory("thirdparty/benchmark")
+
+
+# file(GLOB TEST_SOURCES test/*.cpp)
+# add_executable(unit-tests ${TEST_SOURCES})
+
+# # libbenchmark.a supports threads and therefore needs pthread support
+# find_package(Threads REQUIRED)
+# file(GLOB BENCH_SOURCES bench/*.cpp)
+# add_executable(bench-tests ${BENCH_SOURCES})
+
+# # link benchmark static library to the bench-tests binary so the bench tests know where to find the benchmark impl code
+# target_link_libraries(bench-tests ${MASON_PACKAGE_benchmark_STATIC_LIBS} ${CMAKE_THREAD_LIBS_INIT})
