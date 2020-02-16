@@ -5,6 +5,7 @@
 
 #include <benchmark/benchmark.h>
 #include "img_filters.hpp"
+#include "stb_image.h"
 
 
 void BM_TestFilter(benchmark::State& state)

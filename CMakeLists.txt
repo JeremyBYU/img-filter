@@ -39,6 +39,7 @@ find_package(OpenMP)
 ### Google Testing and Benchmarks Libraries
 add_subdirectory("thirdparty/googletest")
 add_subdirectory("thirdparty/benchmark")
+SET(STB_INCLUDE_DIRS "thirdparty/stb")
 
 
 #### Project Files
@@ -74,4 +75,5 @@ set_target_properties(img_filter PROPERTIES VERSION ${PROJECT_VERSION})
 #### Benchmark Executables
 set(IMGFILTER_BENCH_SRC "${PROJECT_SOURCE_DIR}/bench")
 add_executable(bench-run ${IMGFILTER_BENCH_SRC}/bench_run.cpp)
+target_include_directories(bench-run PRIVATE ${STB_INCLUDE_DIRS})
 target_link_libraries(bench-run benchmark::benchmark OpenMP::OpenMP_CXX img_filter)
