@@ -3,7 +3,7 @@
 namespace img_filters
 {
 
-std::string getfilter(std::string a)
+std::string TestFilter(std::string a)
 {
     return "Hello " + a;
 }
