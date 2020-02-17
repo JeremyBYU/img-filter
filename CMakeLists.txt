@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(WERROR "Add -Werror flag to build (turns warnings into errors)" ON)
+option(WERROR "Add -Werror flag to build (turns warnings into errors)" OFF)
 #### Configuration
 ### Configure Optimization
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -39,14 +39,14 @@ find_package(OpenMP)
 ### Google Testing and Benchmarks Libraries
 add_subdirectory("thirdparty/googletest")
 add_subdirectory("thirdparty/benchmark")
+add_subdirectory("thirdparty/spdlog")
 SET(STB_INCLUDE_DIRS "thirdparty/stb")
 
 
 #### Project Files
 set(IMGFILTER_SRC "${PROJECT_SOURCE_DIR}/src")
 set(IMGFILTER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
-set(IMGFILTER_EXAMPLES_CPP_DIR "${PROJECT_SOURCE_DIR}/examples")
-set(IMGFILTER_SOURCE_FILES ${IMGFILTER_SRC}/realsense_filters.cpp)
+set(IMGFILTER_SOURCE_FILES ${IMGFILTER_SRC}/realsense_filters.cpp ${IMGFILTER_SRC}/helper.cpp)
 
 file(GLOB ALL_HEADERS ${IMGFILTER_INCLUDE_DIR}/img_filters/*.hpp)
 set(IMGFILTER_HEADER_FILES ${IMGFILTER_INCLUDE_DIR}/img_filters.hpp ALL_HEADERS)
@@ -63,13 +63,21 @@ target_compile_options(img_filter PRIVATE
           /W4>)
 
 
-#### Set Header and Properties of Image Filter Library
+### Set Header and Properties of Image Filter Library
 set_target_properties(img_filter PROPERTIES PUBLIC_HEADER "${IMGFILTER_HEADER_FILES}")
+target_include_directories(${PROJECT_NAME} PRIVATE ${STB_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 $<BUILD_INTERFACE:${IMGFILTER_INCLUDE_DIR}>
 $<INSTALL_INTERFACE:include>
 PRIVATE src)
 set_target_properties(img_filter PROPERTIES VERSION ${PROJECT_VERSION})
+target_link_libraries(img_filter PRIVATE spdlog::spdlog)
+
+#### Create Examples
+set(IMGFILTER_EXAMPLES_SRC "${PROJECT_SOURCE_DIR}/examples")
+add_executable(load-image ${IMGFILTER_EXAMPLES_SRC}/load_image.cpp)
+target_include_directories(load-image PRIVATE ${STB_INCLUDE_DIRS})
+target_link_libraries(load-image PRIVATE img_filter)
 
 
 #### Benchmark Executables

@@ -5,13 +5,9 @@
 
 #include <string>
 
-namespace img_filters
-{
-    
-    
+namespace img_filters {
+
 std::string TestFilter(std::string a);
-
-
 }
 
 #endif
