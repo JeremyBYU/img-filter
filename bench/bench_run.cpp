@@ -12,7 +12,7 @@ void BM_TestFilter(benchmark::State& state)
 {
     
     for (auto _ : state) {
-        img_filters::TestFilter("test");
+        img_filters::rs::TestFilter("test");
     }
 }
 

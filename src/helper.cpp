@@ -1,5 +1,6 @@
 #include "img_filters.hpp"
 #include <stdio.h>
+#include <fstream>
 #include <iostream>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -15,19 +16,20 @@ Z16_BUFFER get_depth_image(std::string fpath, int w, int h)
     size_t num_bytes = num_pixels * 2;
     if (stat(fpath.c_str(), &results) == 0)
     {
-        if(logger)
+        if (logger)
         {
-            logger->info("Size is: {}; Expected: {}",results.st_size ,num_bytes);
+            logger->info("Size is: {}; Expected: {}", results.st_size, num_bytes);
         }
-        
     }
     else
     {
         if (logger)
-            logger->error("Error occurred reading file",results.st_size ,num_bytes);
+            logger->error("Error occurred reading file", results.st_size, num_bytes);
     }
+    std::ifstream myFile(fpath.c_str(), std::ios::in | std::ios::binary);
+    // fread(img_data.data(), 2, num_pixels, myFile);
+    myFile.read(reinterpret_cast<char*>(img_data.data()), num_bytes);
     return img_data;
-    // fread (img_data.data(), 2, num_pixels, FILE * stream );
 }
 
 } // namespace img_filters

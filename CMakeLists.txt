@@ -36,6 +36,7 @@ endif()
 
 #### Project Dependencies
 find_package(OpenMP)
+find_package(OpenCV REQUIRED)
 ### Google Testing and Benchmarks Libraries
 add_subdirectory("thirdparty/googletest")
 add_subdirectory("thirdparty/benchmark")
@@ -46,14 +47,14 @@ SET(STB_INCLUDE_DIRS "thirdparty/stb")
 #### Project Files
 set(IMGFILTER_SRC "${PROJECT_SOURCE_DIR}/src")
 set(IMGFILTER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
-set(IMGFILTER_SOURCE_FILES ${IMGFILTER_SRC}/realsense_filters.cpp ${IMGFILTER_SRC}/helper.cpp)
+set(IMGFILTER_SOURCE_FILES ${IMGFILTER_SRC}/realsense_filters.cpp ${IMGFILTER_SRC}/spatial_filter.cpp ${IMGFILTER_SRC}/helper.cpp)
 
 file(GLOB ALL_HEADERS ${IMGFILTER_INCLUDE_DIR}/img_filters/*.hpp)
 set(IMGFILTER_HEADER_FILES ${IMGFILTER_INCLUDE_DIR}/img_filters.hpp ALL_HEADERS)
 
 ### Create Image Filter Library
 set(LIB_TYPE STATIC)
-add_library(img_filter ${LIB_TYPE} ${IMGFILTER_SOURCE_FILES})
+add_library(img_filter ${LIB_TYPE} "${IMGFILTER_SOURCE_FILES}")
 
 ### Enable warnings for ONLY this target. Error on them
 target_compile_options(img_filter PRIVATE
@@ -77,7 +78,7 @@ target_link_libraries(img_filter PRIVATE spdlog::spdlog)
 set(IMGFILTER_EXAMPLES_SRC "${PROJECT_SOURCE_DIR}/examples")
 add_executable(load-image ${IMGFILTER_EXAMPLES_SRC}/load_image.cpp)
 target_include_directories(load-image PRIVATE ${STB_INCLUDE_DIRS})
-target_link_libraries(load-image PRIVATE img_filter spdlog::spdlog)
+target_link_libraries(load-image PRIVATE img_filter spdlog::spdlog ${OpenCV_LIBRARIES})
 
 
 #### Benchmark Executables
