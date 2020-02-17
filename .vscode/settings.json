@@ -62,7 +62,10 @@
         "forward_list": "cpp",
         "list": "cpp",
         "unordered_set": "cpp",
-        "mutex": "cpp"
+        "mutex": "cpp",
+        "csignal": "cpp",
+        "future": "cpp",
+        "variant": "cpp"
     },
     "python.pythonPath": "/home/jeremy/miniconda3/envs/polylidar/bin/python"
 }

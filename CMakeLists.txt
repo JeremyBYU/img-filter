@@ -77,7 +77,7 @@ target_link_libraries(img_filter PRIVATE spdlog::spdlog)
 set(IMGFILTER_EXAMPLES_SRC "${PROJECT_SOURCE_DIR}/examples")
 add_executable(load-image ${IMGFILTER_EXAMPLES_SRC}/load_image.cpp)
 target_include_directories(load-image PRIVATE ${STB_INCLUDE_DIRS})
-target_link_libraries(load-image PRIVATE img_filter)
+target_link_libraries(load-image PRIVATE img_filter spdlog::spdlog)
 
 
 #### Benchmark Executables

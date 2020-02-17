@@ -4,8 +4,9 @@ const std::string DEFAULT_DEPTH_IMAGE = "./fixtures/realsense/test_depth.raw";
 
 int main(int argc, char const *argv[])
 {
-    auto console = spdlog::stderr_color_st("console");
+    auto console = spdlog::stdout_logger_st("console");
     console->info("Starting up");
-    img_filters::get_depth_image(DEFAULT_DEPTH_IMAGE);
+    auto data = img_filters::get_depth_image(DEFAULT_DEPTH_IMAGE);
+    // std::cout << "After call" <<std::endl;
     return 0;
 }
