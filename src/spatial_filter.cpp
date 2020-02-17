@@ -55,79 +55,13 @@ std::vector<T> spatial_filter(std::vector<T>& source, img_details& details, floa
 
     // Spatial domain transform edge-preserving filter
     if (fp)
-        dxf_smooth<float>(const_cast<void*>(tgt.get_data()), spatial_alpha_param, spatial_edge_threshold, spatial_iterations, holes_filling_mode, holes_filling_radius, details);
+        dxf_smooth<float>(static_cast<void*>(tgt.data()), spatial_alpha_param, spatial_edge_threshold, spatial_iterations, holes_filling_mode, holes_filling_radius, details);
     else
-        dxf_smooth<uint16_t>(const_cast<void*>(tgt.get_data()), spatial_alpha_param, spatial_edge_threshold, spatial_iterations, holes_filling_mode, holes_filling_radius, details);
+        dxf_smooth<uint16_t>(static_cast<void*>(tgt.data()), spatial_alpha_param, spatial_edge_threshold, spatial_iterations, holes_filling_mode, holes_filling_radius, details);
 
     return tgt;
 }
 
-// template <typename T>
-std::vector<unsigned short> spatial_filter(std::vector<unsigned short>& source, img_details& details, float spatial_alpha_param, float spatial_edge_threshold, int spatial_iterations, uint8_t holes_filling_mode)
-{
-
-    auto tgt = prepare_target_frame<unsigned short>(source, details);
-    auto holes_filling_radius = get_hole_filling_radius(holes_filling_mode);
-
-
-    dxf_smooth<unsigned short>(static_cast<void*>(tgt.data()), spatial_alpha_param, spatial_edge_threshold, spatial_iterations, holes_filling_mode, holes_filling_radius, details);
-
-    return tgt;
-}
-
-// void  spatial_filter::update_configuration(const rs2::frame& f)
-// {
-//     if (f.get_profile().get() != _source_stream_profile.get())
-//     {
-//         _source_stream_profile = f.get_profile();
-//         _target_stream_profile = _source_stream_profile.clone(RS2_STREAM_DEPTH, 0, _source_stream_profile.format());
-
-//         _extension_type = f.is<rs2::disparity_frame>() ? RS2_EXTENSION_DISPARITY_FRAME : RS2_EXTENSION_DEPTH_FRAME;
-//         _bpp = (_extension_type == RS2_EXTENSION_DISPARITY_FRAME) ? sizeof(float) : sizeof(uint16_t);
-//         auto vp = _target_stream_profile.as<rs2::video_stream_profile>();
-//         _focal_lenght_mm = vp.get_intrinsics().fx;
-//         _width = vp.width();
-//         _height = vp.height();
-//         _stride = _width * _bpp;
-//         _current_frm_size_pixels = _width * _height;
-
-//         // Check if the new frame originated from stereo-based depth sensor
-//         // retrieve the stereo baseline parameter
-//         // TODO refactor disparity parameters into the frame's metadata
-//         auto snr = ((frame_interface*)f.get())->get_sensor().get();
-//         librealsense::depth_stereo_sensor* dss;
-
-//         // Playback sensor
-//         if (auto a = As<librealsense::extendable_interface>(snr))
-//         {
-//             librealsense::depth_stereo_sensor* ptr;
-//             if ((_stereoscopic_depth = a->extend_to(TypeToExtension<librealsense::depth_stereo_sensor>::value, (void**)&ptr)))
-//             {
-//                 dss = ptr;
-//                 _stereo_baseline_mm = dss->get_stereo_baseline_mm();
-//             }
-//         }
-//         else if (auto depth_emul = As<librealsense::software_sensor>(snr))
-//         {
-//             // Software device can obtain these options via Options interface
-//             if (depth_emul->supports_option(RS2_OPTION_STEREO_BASELINE))
-//             {
-//                 _stereo_baseline_mm = depth_emul->get_option(RS2_OPTION_STEREO_BASELINE).query()*1000.f;
-//                 _stereoscopic_depth = true;
-//             }
-//         }
-//         else // Live sensor
-//         {
-//             _stereoscopic_depth = Is<librealsense::depth_stereo_sensor>(snr);
-//             dss = As<librealsense::depth_stereo_sensor>(snr);
-//             if (_stereoscopic_depth)
-//                 _stereo_baseline_mm = dss->get_stereo_baseline_mm();
-//         }
-
-//         _spatial_edge_threshold = _spatial_delta_param;// (_extension_type == RS2_EXTENSION_DISPARITY_FRAME) ?
-//                                                        // (_focal_lenght_mm * _stereo_baseline_mm) / float(_spatial_delta_param) : _spatial_delta_param;
-//     }
-// }
 template <typename T>
 std::vector<T> prepare_target_frame(std::vector<T>& source, img_details& details)
 {
@@ -432,6 +366,11 @@ void recursive_filter_vertical_fp(void* image_data, float alpha, float deltaZ, i
         u++;
     }
 }
+template std::vector<float> spatial_filter(std::vector<float>& source, img_details& details,
+                                           float spatial_alpha_param, float spatial_edge_threshold, int spatial_iterations, uint8_t holes_filling_mode);
+
+template std::vector<unsigned short> spatial_filter(std::vector<unsigned short>& source, img_details& details,
+                                                    float spatial_alpha_param, float spatial_edge_threshold, int spatial_iterations, uint8_t holes_filling_mode);
 
 } // namespace rs
 

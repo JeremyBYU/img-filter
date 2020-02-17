@@ -5,7 +5,8 @@
 #define IMGFILTERS_RSFILTERS
 
 #define _USE_MATH_DEFINES
-#include "img_filters/spatial_filter.hpp"
+#include "img_filters/rs/spatial_filter.hpp"
+#include "img_filters/rs/disparity_transform.hpp"
 
 #include <string>
 

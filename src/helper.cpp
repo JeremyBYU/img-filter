@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <sys/stat.h>
 
@@ -18,7 +19,7 @@ Z16_BUFFER get_depth_image(std::string fpath, int w, int h)
     {
         if (logger)
         {
-            logger->info("Size is: {}; Expected: {}", results.st_size, num_bytes);
+            logger->debug("Size is: {}; Expected: {}", results.st_size, num_bytes);
         }
     }
     else
@@ -31,5 +32,49 @@ Z16_BUFFER get_depth_image(std::string fpath, int w, int h)
     myFile.read(reinterpret_cast<char*>(img_data.data()), num_bytes);
     return img_data;
 }
+
+std::tuple<img_details, depth_info> get_depth_metadata(std::string fpath)
+{
+    auto logger = spdlog::get("console");
+    img_details details;
+    depth_info info{50.0021f, 425.849243f, 0.001f, 0};
+
+    std::ifstream file(fpath.c_str());
+    std::string str; 
+    int counter =0;
+    while (std::getline(file, str))
+    {
+        std::stringstream ss(str);
+        std::vector<std::string> result;
+
+        while( ss.good() )
+        {
+            std::string substr;
+            std::getline( ss, substr, ',');
+            result.push_back( substr );
+        }
+
+        if (counter == 5)
+        {
+            details.w =  std::stoi(result[1]);
+        }
+        else if (counter == 6)
+        {
+            details.h =  std::stoi(result[1]);
+        }
+        else if (counter == 7)
+        {
+            details.bpp =  std::stoi(result[1]);
+        }
+        else if (counter == 11)
+        {
+            info.focal_length_x_mm =  std::stof(result[1]);
+        }
+        counter++;
+    }
+    return std::make_tuple(details, info);
+}
+
+
 
 } // namespace img_filters

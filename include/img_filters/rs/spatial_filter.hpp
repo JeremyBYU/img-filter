@@ -19,7 +19,7 @@ namespace rs {
     template <typename T>
     std::vector<T> spatial_filter(std::vector<T> &source, img_details &details, float spatial_alpha_param, float spatial_edge_threshold, int spatial_iterations, uint8_t holes_filling_mode);
 
-    std::vector<unsigned short> spatial_filter(std::vector<unsigned short> &source, img_details &details, float spatial_alpha_param, float spatial_edge_threshold, int spatial_iterations, uint8_t holes_filling_mode);
+    // std::vector<unsigned short> spatial_filter(std::vector<unsigned short> &source, img_details &details, float spatial_alpha_param, float spatial_edge_threshold, int spatial_iterations, uint8_t holes_filling_mode);
     template <typename T>
     std::vector<T> prepare_target_frame(std::vector<T> &source, img_details &details);
     void recursive_filter_horizontal_fp(void* image_data, float alpha, float deltaZ, img_details &details);

@@ -67,5 +67,5 @@
         "future": "cpp",
         "variant": "cpp"
     },
-    "python.pythonPath": "/home/jeremy/miniconda3/envs/polylidar/bin/python"
+    "python.pythonPath": "/home/jeremy/miniconda3/envs/realsense/bin/python"
 }
