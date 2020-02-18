@@ -14,6 +14,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(OPTIMIZATION_FLAGS "-O0 -DDEBUG")
     message("-- Configuring debug build")
 else()
+    # march=native made this slower for me.  Must be a bad vectorization
     set(OPTIMIZATION_FLAGS "-O3 -DNDEBUG")
     message("-- Configuring release build")
 endif()
