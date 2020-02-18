@@ -4,7 +4,7 @@ project(img_filter VERSION ${PROJECT_VERSION}
         DESCRIPTION "Simple Image Filter Library"
         LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(WERROR "Add -Werror flag to build (turns warnings into errors)" OFF)
@@ -47,7 +47,8 @@ SET(STB_INCLUDE_DIRS "thirdparty/stb")
 #### Project Files
 set(IMGFILTER_SRC "${PROJECT_SOURCE_DIR}/src")
 set(IMGFILTER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
-set(IMGFILTER_SOURCE_FILES ${IMGFILTER_SRC}/realsense_filters.cpp ${IMGFILTER_SRC}/spatial_filter.cpp ${IMGFILTER_SRC}/helper.cpp)
+set(IMGFILTER_SOURCE_FILES ${IMGFILTER_SRC}/realsense_filters.cpp ${IMGFILTER_SRC}/spatial_filter.cpp 
+                            ${IMGFILTER_SRC}/helper.cpp ${IMGFILTER_SRC}/fastguidedfilter.cpp  )
 
 file(GLOB ALL_HEADERS ${IMGFILTER_INCLUDE_DIR}/img_filters/*.hpp)
 set(IMGFILTER_HEADER_FILES ${IMGFILTER_INCLUDE_DIR}/img_filters.hpp ALL_HEADERS)
@@ -72,13 +73,15 @@ $<BUILD_INTERFACE:${IMGFILTER_INCLUDE_DIR}>
 $<INSTALL_INTERFACE:include>
 PRIVATE src)
 set_target_properties(img_filter PROPERTIES VERSION ${PROJECT_VERSION})
-target_link_libraries(img_filter PRIVATE spdlog::spdlog)
+target_link_libraries(img_filter PRIVATE spdlog::spdlog ${OpenCV_LIBRARIES})
 
 #### Create Examples
 set(IMGFILTER_EXAMPLES_SRC "${PROJECT_SOURCE_DIR}/examples")
 add_executable(load-image ${IMGFILTER_EXAMPLES_SRC}/load_image.cpp)
 target_include_directories(load-image PRIVATE ${STB_INCLUDE_DIRS})
 target_link_libraries(load-image PRIVATE img_filter spdlog::spdlog ${OpenCV_LIBRARIES})
+add_executable(cv-guided ${IMGFILTER_EXAMPLES_SRC}/cv_guided.cpp)
+target_link_libraries(cv-guided PRIVATE img_filter spdlog::spdlog ${OpenCV_LIBRARIES})
 
 
 #### Benchmark Executables

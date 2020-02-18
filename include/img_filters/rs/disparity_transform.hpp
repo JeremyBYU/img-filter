@@ -62,43 +62,5 @@ namespace rs{
     }
 
 
-    // private:
-    //     void    update_transformation_profile(const rs2::frame& f);
-
-    //     void    on_set_mode(bool to_disparity);
-
-    //     bool                    _transform_to_disparity;
-    //     rs2::stream_profile     _source_stream_profile;
-    //     rs2::stream_profile     _target_stream_profile;
-    //     bool                    _update_target;
-    //     bool                    _stereoscopic_depth;
-    //     float                   _stereo_baseline_meter; // in meters
-    //     float                   _depth_units;
-    //     float                   _d2d_convert_factor;
-    //     size_t                  _width, _height;
-    //     size_t                  _bpp;
-    // };
-   
-        // struct info {
-        //     bool stereoscopic_depth = false;
-        //     float depth_units = 0;
-        //     float d2d_convert_factor = 0;
-        // };
-
-
-                    // info.depth_units = dss->get_depth_scale();
-                    // stereo_baseline_meter = dss->get_stereo_baseline_mm()* 0.001f;
-
-
-            // if (info.stereoscopic_depth)
-            // {
-            //     auto vp = f.get_profile().as<rs2::video_stream_profile>();
-            //     auto focal_lenght_mm = vp.get_intrinsics().fx;
-            //     const uint8_t fractional_bits = 5;
-            //     const uint8_t fractions = 1 << fractional_bits;
-            //     info.d2d_convert_factor = (stereo_baseline_meter * focal_lenght_mm * fractions) / info.depth_units;
-            // }
-
-
 }
 }
