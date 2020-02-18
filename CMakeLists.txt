@@ -85,4 +85,4 @@ target_link_libraries(load-image PRIVATE img_filter spdlog::spdlog ${OpenCV_LIBR
 set(IMGFILTER_BENCH_SRC "${PROJECT_SOURCE_DIR}/bench")
 add_executable(bench-run ${IMGFILTER_BENCH_SRC}/bench_run.cpp)
 target_include_directories(bench-run PRIVATE ${STB_INCLUDE_DIRS})
-target_link_libraries(bench-run benchmark::benchmark OpenMP::OpenMP_CXX img_filter)
+target_link_libraries(bench-run benchmark::benchmark OpenMP::OpenMP_CXX spdlog::spdlog img_filter)
